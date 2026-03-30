@@ -1,0 +1,153 @@
+table fact_customer_activity
+	lineageTag: ba752b71-acdb-4f93-92e9-01ad19ab93cd
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: eb9c0e47-4ce3-4e9a-9f15-962419d9f22f
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Recency
+		dataType: int64
+		formatString: 0
+		lineageTag: e578a105-81f0-455b-aa86-dbd765a99381
+		summarizeBy: sum
+		sourceColumn: Recency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Web_Visits_Last_Month
+		dataType: int64
+		formatString: #,0
+		lineageTag: bac817ab-6975-45fe-9fc2-3503532627bf
+		summarizeBy: sum
+		sourceColumn: Web_Visits_Last_Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column Complain
+		dataType: int64
+		formatString: 0
+		lineageTag: e03f75c4-185d-4cc7-955a-2e759712232c
+		summarizeBy: sum
+		sourceColumn: Complain
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dt_Customer
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: eb277d29-1184-4a59-9952-326a4a50ac49
+		summarizeBy: none
+		sourceColumn: Dt_Customer
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Amount_Wine_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: 00969f55-5215-4a5f-be64-300f5fe72067
+		summarizeBy: sum
+		sourceColumn: Amount_Wine_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount_Fruit_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: 399a36ca-3cb5-4ea9-afc5-09ab756e50c9
+		summarizeBy: sum
+		sourceColumn: Amount_Fruit_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount_Meat_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: 86eac286-0fb2-49a9-b309-69917202beec
+		summarizeBy: sum
+		sourceColumn: Amount_Meat_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount_Fish_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: f246edc9-942c-4ecf-993c-deead62b22ef
+		summarizeBy: sum
+		sourceColumn: Amount_Fish_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount_Sweet_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: 0c981c4f-be69-4514-bbee-7b36a44dad07
+		summarizeBy: sum
+		sourceColumn: Amount_Sweet_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Amount_Baked_Products
+		dataType: int64
+		formatString: #,0
+		lineageTag: c2782fdc-2a1b-48ec-9daf-31dcdf79fcbe
+		summarizeBy: sum
+		sourceColumn: Amount_Baked_Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purchased-Deal
+		dataType: int64
+		formatString: #,0
+		lineageTag: 81e68b48-610a-4ba0-b51a-f1e724532a46
+		summarizeBy: sum
+		sourceColumn: Purchased-Deal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purchased-Web
+		dataType: int64
+		formatString: #,0
+		lineageTag: bea9b1f8-0775-4c20-8763-bbeed94f1afa
+		summarizeBy: sum
+		sourceColumn: Purchased-Web
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purchased-Catalog
+		dataType: int64
+		formatString: #,0
+		lineageTag: e69c3d32-70c7-41c7-8830-7eb1f136c46c
+		summarizeBy: sum
+		sourceColumn: Purchased-Catalog
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purchased-Store
+		dataType: int64
+		formatString: #,0
+		lineageTag: a0c580cf-1fc9-42aa-a887-fe8b5534c686
+		summarizeBy: sum
+		sourceColumn: Purchased-Store
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_customer_activity = m
+		mode: import
+		source =
+				let
+				    Source = research_data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"ID", "Dt_Customer", "Recency", "Amount_Wine_Products", "Amount_Fruit_Products", "Amount_Meat_Products", "Amount_Fish_Products", "Amount_Sweet_Products", "Amount_Baked_Products", "Purchased-Deal", "Purchased-Web", "Purchased-Catalog", "Purchased-Store", "Web_Visits_Last_Month", "Complain"})
+				in
+				    #"Removed Other Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

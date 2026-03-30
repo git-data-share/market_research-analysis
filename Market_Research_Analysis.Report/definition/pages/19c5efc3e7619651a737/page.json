@@ -1,0 +1,62 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "19c5efc3e7619651a737",
+  "displayName": "Campaign Performance",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 4,
+                    "Percent": -0.5
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "5ac346a0a5280c0d6c07",
+      "target": "8f02bd65d48ab4968600",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "5ac346a0a5280c0d6c07",
+      "target": "0bf5ae60b4017b946087",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "5ac346a0a5280c0d6c07",
+      "target": "4acb924c81c03492d204",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "5ac346a0a5280c0d6c07",
+      "target": "e28af680770b7174067a",
+      "type": "HighlightFilter"
+    },
+    {
+      "source": "5ac346a0a5280c0d6c07",
+      "target": "005c4a7db017eee84a29",
+      "type": "HighlightFilter"
+    }
+  ]
+}

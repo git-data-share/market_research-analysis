@@ -1,0 +1,39 @@
+expression research_data_dictionary =
+		let
+		    Source = Csv.Document(File.Contents("D:\Taarika\BA-BI-Documents (Taarika)\Projects - BI\Market Research Analysis\dataset\research_data_dictionary.csv"),[Delimiter=",", Columns=2, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"Field", type text}, {"Description", type text}})
+		in
+		    #"Changed Type1"
+	lineageTag: efb421b0-739d-44d5-a0da-454112e7e0c3
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression research_data =
+		let
+		    Source = Csv.Document(File.Contents("D:\Taarika\BA-BI-Documents (Taarika)\Projects - BI\Market Research Analysis\dataset\research_data.csv"),[Delimiter=",", Columns=28, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+		    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ID", Int64.Type}, {"Year_Birth", Int64.Type}, {"Education", type text}, {"Marital_Status", type text}, {" Income ", Int64.Type}, {"Kidhome", Int64.Type}, {"Teenhome", Int64.Type}, {"Dt_Customer", type date}, {"Recency", Int64.Type}, {"MntWines", Int64.Type}, {"MntFruits", Int64.Type}, {"MntMeatProducts", Int64.Type}, {"MntFishProducts", Int64.Type}, {"MntSweetProducts", Int64.Type}, {"MntBakedProds", Int64.Type}, {"NumDealsPurchases", Int64.Type}, {"NumWebPurchases", Int64.Type}, {"NumCatalogPurchases", Int64.Type}, {"NumStorePurchases", Int64.Type}, {"NumWebVisitsMonth", Int64.Type}, {"AcceptedCmp3", Int64.Type}, {"AcceptedCmp4", Int64.Type}, {"AcceptedCmp5", Int64.Type}, {"AcceptedCmp1", Int64.Type}, {"AcceptedCmp2", Int64.Type}, {"Response", Int64.Type}, {"Complain", Int64.Type}, {"Country", type text}}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Year_Birth", "Age"}}),
+		    #"Added Prefix" = Table.TransformColumns(#"Renamed Columns", {{"Age", each "1/1/" & Text.From(_, "en-CA"), type text}}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Added Prefix",{{"Age", type date}}),
+		    #"Calculated Age" = Table.TransformColumns(#"Changed Type1",{{"Age", each Date.From(DateTime.LocalNow()) - _, type duration}}),
+		    #"Calculated Total Years" = Table.TransformColumns(#"Calculated Age",{{"Age", each Duration.TotalDays(_) / 365, type number}}),
+		    #"Changed Type2" = Table.TransformColumnTypes(#"Calculated Total Years",{{"Age", Int64.Type}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type2","2n ","2nd ",Replacer.ReplaceText,{"Education"}),
+		    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","YOLO","Other",Replacer.ReplaceText,{"Marital_Status"}),
+		    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Alone","Single",Replacer.ReplaceText,{"Marital_Status"}),
+		    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","Absurd","Other",Replacer.ReplaceText,{"Marital_Status"}),
+		    #"Changed Type3" = Table.TransformColumnTypes(#"Replaced Value3",{{" Income ", Currency.Type}}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Changed Type3",{{"MntWines", "Amount_Wine_Products"}, {"MntFruits", "Amount_Fruit_Products"}, {"MntMeatProducts", "Amount_Meat_Products"}, {"MntFishProducts", "Amount_Fish_Products"}, {"MntSweetProducts", "Amount_Sweet_Products"}, {"MntBakedProds", "Amount_Baked_Products"}, {"NumDealsPurchases", "Purchased-Deal"}, {"NumWebPurchases", "Purchased-Web"}, {"NumCatalogPurchases", "Purchased-Catalog"}, {"NumStorePurchases", "Purchased-Store"}, {"NumWebVisitsMonth", "Web_Visits_Last_Month"}, {"AcceptedCmp3", "Accepted_Campaign_3"}, {"AcceptedCmp4", "Accepted_Campaign_4"}, {"AcceptedCmp5", "Accepted_Campaign_5"}, {"AcceptedCmp1", "Accepted_Campaign_1"}, {"AcceptedCmp2", "Accepted_Campaign_2"}, {"Response", "Accepted_Campaign_6"}})
+		in
+		    #"Renamed Columns1"
+	lineageTag: 92ca972c-d4fe-4092-b1b0-fbba11c67e68
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
