@@ -1,0 +1,27 @@
+relationship 0e79497d-e687-cf97-e84d-67117139c9ee
+	fromColumn: fact_customer_activity.Dt_Customer
+	toColumn: dim_date.Date
+
+relationship d99bbb3e-b836-b9d7-a363-82c3ab9802b5
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dim_customer.ID
+	toColumn: fact_customer_activity.ID
+
+relationship 9483dc0f-89f9-65a0-5b8a-71a7e078a434
+	crossFilteringBehavior: bothDirections
+	fromColumn: campaign_fact.ID
+	toColumn: dim_customer.ID
+
+relationship AutoDetected_c9fd0a88-061b-4320-92e6-dd9502eea23a
+	fromColumn: products_fact.Products
+	toColumn: dim_products.Products
+
+relationship 4837b41f-6cba-93fc-5ea6-4fe4179088e0
+	fromColumn: products_fact.ID
+	toColumn: dim_customer.ID
+
+relationship 82f75a9f-a5dd-338b-1027-b7444837c51b
+	fromColumn: platform_fact.ID
+	toColumn: dim_customer.ID
+

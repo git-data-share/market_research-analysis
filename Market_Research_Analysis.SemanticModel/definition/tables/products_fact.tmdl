@@ -1,0 +1,49 @@
+table products_fact
+	lineageTag: 025a0ab2-63d5-454f-a5e9-40ffbecb9121
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 30d0ce2a-38ce-429d-8ea6-f3cdee51af26
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Products
+		dataType: string
+		lineageTag: bb206339-aa4d-47a2-a2db-59e4e871efd7
+		summarizeBy: none
+		sourceColumn: Products
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Product_Sales
+		dataType: int64
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: e22b4bfd-4ee3-4389-9789-e074d9b7a8c9
+		summarizeBy: sum
+		sourceColumn: Total_Product_Sales
+
+		annotation SummarizationSetBy = Automatic
+
+	partition products_fact = m
+		mode: import
+		source =
+				let
+				    Source = research_data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"ID", "Amount_Wine_Products", "Amount_Fruit_Products", "Amount_Meat_Products", "Amount_Fish_Products", "Amount_Sweet_Products", "Amount_Baked_Products"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"ID"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Products"}, {"Value", "Product_Sales"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","Amount_","",Replacer.ReplaceText,{"Products"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","_Products","",Replacer.ReplaceText,{"Products"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","Baked","Baked Goods",Replacer.ReplaceText,{"Products"}),
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value2",{{"ID", Order.Ascending}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Sorted Rows",{{"Product_Sales", "Total_Product_Sales"}})
+				in
+				    #"Renamed Columns1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,45 @@
+table platform_fact
+	lineageTag: d89517ff-f5b7-4dcf-93d6-05ab81ed95af
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 6cbead08-8c5f-4f09-badb-6b98ca7fcff6
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PLatform
+		dataType: string
+		lineageTag: 3d962e1f-ab65-4bd7-ab29-e961ad8ba50c
+		summarizeBy: none
+		sourceColumn: PLatform
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: #,0
+		lineageTag: 2f43be82-484d-4a0c-b34d-83238ca9d74f
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	partition platform_fact = m
+		mode: import
+		source =
+				let
+				    Source = research_data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"ID", "Purchased-Deal", "Purchased-Web", "Purchased-Catalog", "Purchased-Store"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"ID"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Value", "Quantity"}, {"Attribute", "PLatform"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","Purchased-","",Replacer.ReplaceText,{"PLatform"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,46 @@
+table campaign_fact
+	lineageTag: 61b2f312-dd81-4cfe-977c-de6d3a1c61ab
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: a8cfeb0f-7970-4edb-897b-b4e692ab3319
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Campaign
+		dataType: string
+		lineageTag: ea8d5276-d57e-439d-b890-ef5c4c141393
+		summarizeBy: none
+		sourceColumn: Campaign
+
+		annotation SummarizationSetBy = Automatic
+
+	column Accepted
+		dataType: int64
+		formatString: 0
+		lineageTag: 76a0d508-4f64-442f-8ada-3ef408b9df58
+		summarizeBy: sum
+		sourceColumn: Accepted
+
+		annotation SummarizationSetBy = Automatic
+
+	partition campaign_fact = m
+		mode: import
+		source =
+				let
+				    Source = research_data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"ID", "Accepted_Campaign_3", "Accepted_Campaign_4", "Accepted_Campaign_5", "Accepted_Campaign_1", "Accepted_Campaign_2", "Accepted_Campaign_6"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Other Columns", {"ID"}, "Attribute", "Value"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Columns",{{"Attribute", "Campaign"}, {"Value", "Accepted"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","Accepted_","",Replacer.ReplaceText,{"Campaign"}),
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"ID", Order.Ascending}, {"Campaign", Order.Ascending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

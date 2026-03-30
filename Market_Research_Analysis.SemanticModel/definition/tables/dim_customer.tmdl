@@ -1,0 +1,127 @@
+table dim_customer
+	lineageTag: e6f5858a-4e7c-4832-9d09-e01eaf05a373
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 17dbda94-8a4a-4b44-8c1b-5ffdc36ba067
+		summarizeBy: none
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age
+		dataType: int64
+		formatString: 0
+		lineageTag: 26ac3a20-7f22-4c9b-8f32-cb6e30a1b2e1
+		summarizeBy: sum
+		sourceColumn: Age
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation __PBI_SemanticLinks = [{"LinkTarget":{"TableName":"dim_customer","TableItemName":"Age Group","ObjectType":4},"LinkType":"UsedInGroup"}]
+
+	column Education
+		dataType: string
+		lineageTag: f3d53690-1dd1-4ed0-8bfe-1e226827c8ae
+		summarizeBy: none
+		sourceColumn: Education
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marital_Status
+		dataType: string
+		lineageTag: ff473a77-c292-475f-afa3-75abb936c700
+		summarizeBy: none
+		sourceColumn: Marital_Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column ' Income '
+		dataType: decimal
+		formatString: \$#,0;-\$#,0;\$#,0
+		lineageTag: f278163c-ffd6-479a-9ad7-52be50e81794
+		summarizeBy: sum
+		sourceColumn: " Income "
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-CA"}
+
+	column Kidhome
+		dataType: int64
+		formatString: 0
+		lineageTag: cf024a44-dc1c-45d2-a7e4-2ae45f915c70
+		summarizeBy: sum
+		sourceColumn: Kidhome
+
+		annotation SummarizationSetBy = Automatic
+
+	column Teenhome
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ac521e0-9d12-482c-8ed3-4f3e3f000a1f
+		summarizeBy: sum
+		sourceColumn: Teenhome
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: c8ce7010-04a3-4584-86c6-158b33ea91eb
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Age Group' =
+			IF(
+				ISBLANK('dim_customer'[Age]),
+				BLANK(),
+				INT('dim_customer'[Age] / 5) * 5
+			)
+		formatString: 0
+		lineageTag: f02fa14d-b113-45e0-b6b3-1f38e865aa5d
+		summarizeBy: none
+
+		extendedProperty GroupingMetadata =
+				{
+				  "version": 0,
+				  "groupedColumns": [
+				    {
+				      "Column": {
+				        "Expression": {
+				          "SourceRef": {
+				            "Entity": "dim_customer"
+				          }
+				        },
+				        "Property": "Age"
+				      }
+				    }
+				  ],
+				  "binningMetadata": {
+				    "binSize": {
+				      "value": 5.0,
+				      "unit": 0
+				    }
+				  }
+				}
+
+		annotation GroupingDesignState = {"Version":0,"Sources":[{"Name":"d","Entity":"dim_customer"}],"GroupedColumns":[{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Age"}}],"BinItem":{"Expression":{"Floor":{"Expression":{"Column":{"Expression":{"SourceRef":{"Source":"d"}},"Property":"Age"}},"Size":5.0}}}}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = research_data,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"ID", "Age", "Education", "Marital_Status", " Income ", "Kidhome", "Teenhome", "Country"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns", {"ID"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
